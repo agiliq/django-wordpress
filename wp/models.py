@@ -1,23 +1,6 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#     * Rearrange models' order
-#     * Make sure each model has one field with primary_key=True
-# Feel free to rename the models, but don't rename db_table values or field names.
-#
-# Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
-# into your database.
-
 from django.db import models
 
-class Commentmeta(models.Model):
-    meta_id = models.IntegerField(primary_key=True)
-    comment_id = models.IntegerField()
-    meta_key = models.CharField(max_length=765, blank=True)
-    meta_value = models.TextField(blank=True)
-    class Meta:
-        db_table = u'wp_commentmeta'
-
-class Comments(models.Model):
+class Comment(models.Model):
     comment_id = models.IntegerField(primary_key=True, db_column='comment_ID') # Field name made lowercase.
     comment_post_id = models.IntegerField(db_column='comment_post_ID') # Field name made lowercase.
     comment_author = models.TextField()
@@ -34,9 +17,21 @@ class Comments(models.Model):
     comment_parent = models.IntegerField()
     user_id = models.IntegerField()
     class Meta:
+        verbose_name = "Comment"
+        verbose_name_plural = "Comments"
         db_table = u'wp_comments'
+        
+class CommentMeta(models.Model):
+    meta_id = models.IntegerField(primary_key=True)
+    comment = models.ForeignKey(Comment)
+    meta_key = models.CharField(max_length=765, blank=True)
+    meta_value = models.TextField(blank=True)
+    class Meta:
+        verbose_name = "Comment Meta"
+        verbose_name_plural = "Comments Meta"
+        db_table = u'wp_commentmeta'
 
-class Links(models.Model):
+class Link(models.Model):
     link_id = models.IntegerField(primary_key=True)
     link_url = models.CharField(max_length=765)
     link_name = models.CharField(max_length=765)
@@ -52,28 +47,24 @@ class Links(models.Model):
     link_notes = models.TextField()
     link_rss = models.CharField(max_length=765)
     class Meta:
+        verbose_name = "Link"
+        verbose_name_plural = "Link"
         db_table = u'wp_links'
 
-class Options(models.Model):
+class Option(models.Model):
     option_id = models.IntegerField(primary_key=True)
     blog_id = models.IntegerField()
     option_name = models.CharField(unique=True, max_length=192)
     option_value = models.TextField()
     autoload = models.CharField(max_length=60)
     class Meta:
+        verbose_name = "Option"
+        verbose_name_plural = "Options"
         db_table = u'wp_options'
 
-class Postmeta(models.Model):
-    meta_id = models.IntegerField(primary_key=True)
-    post_id = models.IntegerField()
-    meta_key = models.CharField(max_length=765, blank=True)
-    meta_value = models.TextField(blank=True)
-    class Meta:
-        db_table = u'wp_postmeta'
-
-class Posts(models.Model):
+class Post(models.Model):
     id = models.IntegerField(db_column='ID', primary_key = True) # Field name made lowercase.
-    post_author = models.ForeignKey("wp.Users", db_column = "post_author")
+    post_author = models.ForeignKey("wp.WpUser", db_column = "post_author")
     post_parent = models.ForeignKey("self", db_column="post_parent")
     post_date = models.DateTimeField()
     post_date_gmt = models.DateTimeField()
@@ -104,12 +95,24 @@ class Posts(models.Model):
         
     def __unicode__(self):
         return self.post_title
+    
+class PostMeta(models.Model):
+    meta_id = models.IntegerField(primary_key=True)
+    post = models.ForeignKey(Post)
+    meta_key = models.CharField(max_length=765, blank=True)
+    meta_value = models.TextField(blank=True)
+    class Meta:
+        verbose_name = "Post Meta"
+        verbose_name_plural = "Posts Meta"
+        db_table = u'wp_postmeta'
 
-class TermRelationships(models.Model):
+class TermRelationship(models.Model):
     object_id = models.IntegerField(primary_key=True)
     term_taxonomy_id = models.IntegerField()
     term_order = models.IntegerField()
     class Meta:
+        verbose_name = "Term Relationship"
+        verbose_name_plural = "Term Relationships"
         db_table = u'wp_term_relationships'
 
 class TermTaxonomy(models.Model):
@@ -120,25 +123,34 @@ class TermTaxonomy(models.Model):
     parent = models.IntegerField()
     count = models.IntegerField()
     class Meta:
+        verbose_name = "Term Taxonomy"
+        verbose_name_plural = "Term Taxonomies"
         db_table = u'wp_term_taxonomy'
 
-class Terms(models.Model):
+class Term(models.Model):
     term_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=600)
     slug = models.CharField(unique=True, max_length=255)
     term_group = models.IntegerField()
     class Meta:
+        verbose_name = "Term"
+        verbose_name_plural = "Terms"
         db_table = u'wp_terms'
 
-class Usermeta(models.Model):
+class UserMeta(models.Model):
     umeta_id = models.IntegerField(primary_key=True)
     user_id = models.IntegerField()
     meta_key = models.CharField(max_length=765, blank=True)
     meta_value = models.TextField(blank=True)
     class Meta:
+        verbose_name = "User Meta"
+        verbose_name_plural = "Users Meta"
         db_table = u'wp_usermeta'
 
-class Users(models.Model):
+class WpUser(models.Model):
+    """This has been given a wp prefix, as contrib.user is so commonly
+    imported name, and we do not wnat to namespace this everywhere."""
+    
     id = models.IntegerField(primary_key=True, db_column='ID') # Field name made lowercase.
     user_login = models.CharField(max_length=180)
     user_pass = models.CharField(max_length=192)
@@ -150,6 +162,8 @@ class Users(models.Model):
     user_status = models.IntegerField()
     display_name = models.CharField(max_length=750)
     class Meta:
+        verbose_name = "User"
+        verbose_name_plural = "Users"
         db_table = u'wp_users'
 
 class YarppKeywordCache(models.Model):
@@ -158,6 +172,8 @@ class YarppKeywordCache(models.Model):
     title = models.TextField()
     date = models.DateTimeField()
     class Meta:
+        verbose_name = "Yarpp Keyword Cache"
+        verbose_name_plural = "Yarpp Keyword Cache"
         db_table = u'wp_yarpp_keyword_cache'
 
 class YarppRelatedCache(models.Model):
@@ -166,5 +182,7 @@ class YarppRelatedCache(models.Model):
     score = models.FloatField()
     date = models.DateTimeField()
     class Meta:
+        verbose_name = "Yarpp Related Cache"
+        verbose_name_plural = "Yarpp Related Cache"
         db_table = u'wp_yarpp_related_cache'
 
