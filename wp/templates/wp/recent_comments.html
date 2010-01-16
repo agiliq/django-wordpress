@@ -1,0 +1,13 @@
+<ul>
+{% for comment in comments %}
+<li>
+	{{ comment.comment_content|truncatewords_html:50 }}
+	<span> {{ comment.comment_author }} </span>
+	
+</li>
+	{% empty %}
+		<p>
+			We have no comments to show at this time.
+		</p>
+{% endfor %}
+</ul>

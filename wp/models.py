@@ -230,7 +230,7 @@ class YarppKeywordCache(models.Model):
         return self.title or str(self.id)
 
 class YarppRelatedCache(models.Model):
-    reference_id = models.IntegerField(primary_key=True, db_column='reference_ID') # Field name made lowercase.
+    reference_id = models.IntegerField(db_column='reference_ID') # Field name made lowercase.
     id = models.IntegerField(primary_key=True, db_column='ID') # Field name made lowercase.
     score = models.FloatField()
     date = models.DateTimeField()

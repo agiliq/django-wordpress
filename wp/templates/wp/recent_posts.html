@@ -1,0 +1,13 @@
+<ul>
+{% for post in posts %}
+<li>
+	{{ post.post_title }}
+	<span> {{ post.post_author.user_nicename }} </span>
+	
+</li>
+	{% empty %}
+		<p>
+			We have no posts to show at this time.
+		</p>
+{% endfor %}
+</ul>
