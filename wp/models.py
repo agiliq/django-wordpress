@@ -9,7 +9,7 @@
 
 from django.db import models
 
-class WpCommentmeta(models.Model):
+class Commentmeta(models.Model):
     meta_id = models.IntegerField(primary_key=True)
     comment_id = models.IntegerField()
     meta_key = models.CharField(max_length=765, blank=True)
@@ -17,7 +17,7 @@ class WpCommentmeta(models.Model):
     class Meta:
         db_table = u'wp_commentmeta'
 
-class WpComments(models.Model):
+class Comments(models.Model):
     comment_id = models.IntegerField(primary_key=True, db_column='comment_ID') # Field name made lowercase.
     comment_post_id = models.IntegerField(db_column='comment_post_ID') # Field name made lowercase.
     comment_author = models.TextField()
@@ -36,7 +36,7 @@ class WpComments(models.Model):
     class Meta:
         db_table = u'wp_comments'
 
-class WpLinks(models.Model):
+class Links(models.Model):
     link_id = models.IntegerField(primary_key=True)
     link_url = models.CharField(max_length=765)
     link_name = models.CharField(max_length=765)
@@ -54,7 +54,7 @@ class WpLinks(models.Model):
     class Meta:
         db_table = u'wp_links'
 
-class WpOptions(models.Model):
+class Options(models.Model):
     option_id = models.IntegerField(primary_key=True)
     blog_id = models.IntegerField()
     option_name = models.CharField(unique=True, max_length=192)
@@ -63,7 +63,7 @@ class WpOptions(models.Model):
     class Meta:
         db_table = u'wp_options'
 
-class WpPostmeta(models.Model):
+class Postmeta(models.Model):
     meta_id = models.IntegerField(primary_key=True)
     post_id = models.IntegerField()
     meta_key = models.CharField(max_length=765, blank=True)
@@ -71,9 +71,10 @@ class WpPostmeta(models.Model):
     class Meta:
         db_table = u'wp_postmeta'
 
-class WpPosts(models.Model):
-    id = models.IntegerField(db_column='ID') # Field name made lowercase.
-    post_author = models.IntegerField()
+class Posts(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key = True) # Field name made lowercase.
+    post_author = models.ForeignKey("wp.Users", db_column = "post_author")
+    post_parent = models.ForeignKey("self", db_column="post_parent")
     post_date = models.DateTimeField()
     post_date_gmt = models.DateTimeField()
     post_content = models.TextField()
@@ -90,23 +91,28 @@ class WpPosts(models.Model):
     post_modified = models.DateTimeField()
     post_modified_gmt = models.DateTimeField()
     post_content_filtered = models.TextField()
-    post_parent = models.IntegerField()
     guid = models.CharField(max_length=765)
     menu_order = models.IntegerField()
     post_type = models.CharField(max_length=60)
     post_mime_type = models.CharField(max_length=300)
     comment_count = models.IntegerField()
+    
     class Meta:
+        verbose_name = "Post"
+        verbose_name_plural = "Posts"
         db_table = u'wp_posts'
+        
+    def __unicode__(self):
+        return self.post_title
 
-class WpTermRelationships(models.Model):
+class TermRelationships(models.Model):
     object_id = models.IntegerField(primary_key=True)
     term_taxonomy_id = models.IntegerField()
     term_order = models.IntegerField()
     class Meta:
         db_table = u'wp_term_relationships'
 
-class WpTermTaxonomy(models.Model):
+class TermTaxonomy(models.Model):
     term_taxonomy_id = models.IntegerField(primary_key=True)
     term_id = models.IntegerField(unique=True)
     taxonomy = models.CharField(max_length=96)
@@ -116,15 +122,15 @@ class WpTermTaxonomy(models.Model):
     class Meta:
         db_table = u'wp_term_taxonomy'
 
-class WpTerms(models.Model):
+class Terms(models.Model):
     term_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=600)
-    slug = models.CharField(unique=True, max_length=600)
+    slug = models.CharField(unique=True, max_length=255)
     term_group = models.IntegerField()
     class Meta:
         db_table = u'wp_terms'
 
-class WpUsermeta(models.Model):
+class Usermeta(models.Model):
     umeta_id = models.IntegerField(primary_key=True)
     user_id = models.IntegerField()
     meta_key = models.CharField(max_length=765, blank=True)
@@ -132,7 +138,7 @@ class WpUsermeta(models.Model):
     class Meta:
         db_table = u'wp_usermeta'
 
-class WpUsers(models.Model):
+class Users(models.Model):
     id = models.IntegerField(primary_key=True, db_column='ID') # Field name made lowercase.
     user_login = models.CharField(max_length=180)
     user_pass = models.CharField(max_length=192)
@@ -146,7 +152,7 @@ class WpUsers(models.Model):
     class Meta:
         db_table = u'wp_users'
 
-class WpYarppKeywordCache(models.Model):
+class YarppKeywordCache(models.Model):
     id = models.IntegerField(primary_key=True, db_column='ID') # Field name made lowercase.
     body = models.TextField()
     title = models.TextField()
@@ -154,7 +160,7 @@ class WpYarppKeywordCache(models.Model):
     class Meta:
         db_table = u'wp_yarpp_keyword_cache'
 
-class WpYarppRelatedCache(models.Model):
+class YarppRelatedCache(models.Model):
     reference_id = models.IntegerField(primary_key=True, db_column='reference_ID') # Field name made lowercase.
     id = models.IntegerField(primary_key=True, db_column='ID') # Field name made lowercase.
     score = models.FloatField()
