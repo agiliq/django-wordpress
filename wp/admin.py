@@ -17,4 +17,3 @@ admin.site.register(Link)
 admin.site.register(Option)
 admin.site.register(YarppKeywordCache)
 admin.site.register(YarppRelatedCache)
-
