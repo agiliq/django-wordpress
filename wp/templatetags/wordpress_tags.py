@@ -12,7 +12,7 @@ def show_comments(num_comments):
 
 @register.inclusion_tag("wp/recent_posts.html")
 def show_posts(num_comments):
-    return {"posts": Post.objects.order_by("-post_date")[:num_comments]}
+    return {"posts": Post.objects.filter(post_type="post", post_status="publish").order_by("-post_date")[:num_comments]}
 
 @register.tag
 def populate_comments(parser, token):
@@ -49,7 +49,7 @@ class PostsNode(template.Node):
     
     def render(self, context):
         ""
-        context[self.name] = Post.objects.order_by("-comment_date")[:self.num_posts]
+        context[self.name] = Post.objects.filter(post_type="post", post_status="publish").order_by("-post_date")[:self.num_posts]
         return ""
     
 

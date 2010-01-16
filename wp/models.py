@@ -3,7 +3,7 @@ from django.db import models
 
 class WpUser(models.Model):
     """This has been given a wp prefix, as contrib.user is so commonly
-    imported name, and we do not wnat to namespace this everywhere."""
+    imported name, and we do not want to namespace this everywhere."""
     
     id = models.IntegerField(primary_key=True, db_column='ID') # Field name made lowercase.
     user_login = models.CharField(max_length=180)
@@ -102,6 +102,11 @@ class Post(models.Model):
         
     def __unicode__(self):
         return self.post_title or str(self.id)
+    
+    def get_absolute_url(self):
+        return self.guid
+        #return "/%s/%s/%s/" % (self.post_date.year, self.post_date.month, (self.post_name or self.id))
+        
     
 class PostMeta(models.Model):
     meta_id = models.IntegerField(primary_key=True)
