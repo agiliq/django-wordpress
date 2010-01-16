@@ -21,15 +21,22 @@ class Comment(models.Model):
         verbose_name_plural = "Comments"
         db_table = u'wp_comments'
         
+    def __unicode__(self):
+        return self.comment_content[:50]
+        
 class CommentMeta(models.Model):
     meta_id = models.IntegerField(primary_key=True)
-    comment = models.ForeignKey(Comment)
+    #comment = models.ForeignKey(Comment)
+    comment_id = models.IntegerField()
     meta_key = models.CharField(max_length=765, blank=True)
     meta_value = models.TextField(blank=True)
     class Meta:
         verbose_name = "Comment Meta"
         verbose_name_plural = "Comments Meta"
         db_table = u'wp_commentmeta'
+        
+    def __unicode__(self):
+        return self.meta_key
 
 class Link(models.Model):
     link_id = models.IntegerField(primary_key=True)
@@ -46,10 +53,14 @@ class Link(models.Model):
     link_rel = models.CharField(max_length=765)
     link_notes = models.TextField()
     link_rss = models.CharField(max_length=765)
+    
     class Meta:
         verbose_name = "Link"
         verbose_name_plural = "Link"
         db_table = u'wp_links'
+        
+    def __unicode__(self):
+        return self.link_name
 
 class Option(models.Model):
     option_id = models.IntegerField(primary_key=True)
@@ -61,6 +72,9 @@ class Option(models.Model):
         verbose_name = "Option"
         verbose_name_plural = "Options"
         db_table = u'wp_options'
+        
+    def __unicode__(self):
+        return self.option_name
 
 class Post(models.Model):
     id = models.IntegerField(db_column='ID', primary_key = True) # Field name made lowercase.
@@ -94,7 +108,7 @@ class Post(models.Model):
         db_table = u'wp_posts'
         
     def __unicode__(self):
-        return self.post_title
+        return self.post_title or str(self.id)
     
 class PostMeta(models.Model):
     meta_id = models.IntegerField(primary_key=True)
@@ -105,27 +119,9 @@ class PostMeta(models.Model):
         verbose_name = "Post Meta"
         verbose_name_plural = "Posts Meta"
         db_table = u'wp_postmeta'
-
-class TermRelationship(models.Model):
-    object_id = models.IntegerField(primary_key=True)
-    term_taxonomy_id = models.IntegerField()
-    term_order = models.IntegerField()
-    class Meta:
-        verbose_name = "Term Relationship"
-        verbose_name_plural = "Term Relationships"
-        db_table = u'wp_term_relationships'
-
-class TermTaxonomy(models.Model):
-    term_taxonomy_id = models.IntegerField(primary_key=True)
-    term_id = models.IntegerField(unique=True)
-    taxonomy = models.CharField(max_length=96)
-    description = models.TextField()
-    parent = models.IntegerField()
-    count = models.IntegerField()
-    class Meta:
-        verbose_name = "Term Taxonomy"
-        verbose_name_plural = "Term Taxonomies"
-        db_table = u'wp_term_taxonomy'
+    
+    def __unicode__(self):
+        return self.post.post_title or str(self.post.id) 
 
 class Term(models.Model):
     term_id = models.IntegerField(primary_key=True)
@@ -136,16 +132,36 @@ class Term(models.Model):
         verbose_name = "Term"
         verbose_name_plural = "Terms"
         db_table = u'wp_terms'
+        
+    def __unicode__(self):
+        return self.name
 
-class UserMeta(models.Model):
-    umeta_id = models.IntegerField(primary_key=True)
-    user_id = models.IntegerField()
-    meta_key = models.CharField(max_length=765, blank=True)
-    meta_value = models.TextField(blank=True)
+
+class TermTaxonomy(models.Model):
+    term_taxonomy_id = models.IntegerField(primary_key=True)
+    term = models.ForeignKey(Term, unique=True)
+    taxonomy = models.CharField(max_length=96)
+    description = models.TextField()
+    parent = models.IntegerField()
+    count = models.IntegerField()
+    
     class Meta:
-        verbose_name = "User Meta"
-        verbose_name_plural = "Users Meta"
-        db_table = u'wp_usermeta'
+        verbose_name = "Term Taxonomy"
+        verbose_name_plural = "Term Taxonomies"
+        db_table = u'wp_term_taxonomy'
+    
+    def __unicode__(self):
+        return self.taxonomy
+    
+class TermRelationship(models.Model):
+    object_id = models.IntegerField(primary_key=True)
+    term_taxonomy = models.ForeignKey(TermTaxonomy)
+    term_order = models.IntegerField()
+    class Meta:
+        verbose_name = "Term Relationship"
+        verbose_name_plural = "Term Relationships"
+        db_table = u'wp_term_relationships'
+        
 
 class WpUser(models.Model):
     """This has been given a wp prefix, as contrib.user is so commonly
@@ -165,6 +181,24 @@ class WpUser(models.Model):
         verbose_name = "User"
         verbose_name_plural = "Users"
         db_table = u'wp_users'
+        
+    def __unicode__(self):
+        return self.user_nicename
+
+
+
+class UserMeta(models.Model):
+    umeta_id = models.IntegerField(primary_key=True)
+    user = models.ForeignKey(WpUser)
+    meta_key = models.CharField(max_length=765, blank=True)
+    meta_value = models.TextField(blank=True)
+    class Meta:
+        verbose_name = "User Meta"
+        verbose_name_plural = "Users Meta"
+        db_table = u'wp_usermeta'
+    
+    def __unicode__(self):
+        return self.user.user_nicename
 
 class YarppKeywordCache(models.Model):
     id = models.IntegerField(primary_key=True, db_column='ID') # Field name made lowercase.
@@ -175,6 +209,9 @@ class YarppKeywordCache(models.Model):
         verbose_name = "Yarpp Keyword Cache"
         verbose_name_plural = "Yarpp Keyword Cache"
         db_table = u'wp_yarpp_keyword_cache'
+        
+    def __unicode__(self):
+        return self.title or str(self.id)
 
 class YarppRelatedCache(models.Model):
     reference_id = models.IntegerField(primary_key=True, db_column='reference_ID') # Field name made lowercase.
