@@ -1,6 +1,6 @@
 from django.contrib import admin
 from wp.models import Post, PostMeta, WpUser, UserMeta, Term, TermTaxonomy, TermRelationship
-from wp.models import Comment, CommentMeta, Link, Option, YarppKeywordCache, YarppRelatedCache
+from wp.models import Comment, CommentMeta, Link, Option
 
 
 admin.site.register(Post)
@@ -15,5 +15,3 @@ admin.site.register(Comment)
 admin.site.register(CommentMeta)
 admin.site.register(Link)
 admin.site.register(Option)
-admin.site.register(YarppKeywordCache)
-admin.site.register(YarppRelatedCache)
