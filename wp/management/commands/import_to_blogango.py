@@ -7,7 +7,6 @@ from django.template.defaultfilters import slugify
 from wp.models import Post, Comment as WpComment, TermTaxonomy, TermRelationship, Term
 from blogango.models import BlogEntry, Comment, Reaction
 
-
 def get_auth_user(wp_author):
     try:
         auth_user = User.objects.get(username='wp_%s' % (wp_author.user_login))
@@ -33,6 +32,7 @@ class Command(BaseCommand):
         for wp_post in wp_posts:
             # insert into BlogEntry
             print wp_post.post_date
+
             blog_entry = BlogEntry.objects.create(id=wp_post.id,
                                                   title=wp_post.post_title,
                                                   slug=slugify(wp_post.post_title),
@@ -60,13 +60,13 @@ class Command(BaseCommand):
             for wp_comment in wp_comments:
                 if wp_comment.comment_type == 'pingback':continue
                 if wp_comment.comment_agent in COMMENT_AGENTS:
-                    comment = Reaction.objects.create(text=wp_comment.comment_contnet,
+                    comment = Reaction.objects.create(text=wp_comment.comment_content,
                                                        comment_for=blog_entry,
                                                        user_name=wp_comment.comment_author,
                                                        user_url=wp_comment.comment_author_url,
                                                        source=wp_comment.comment_agent.lstrip('btc_'))
                 else:
-                    comment = Comment.objects.create(text=wp_comment.comment_comment,
+                    comment = Comment.objects.create(text=wp_comment.comment_content,
                                                      comment_for=blog_entry,
                                                      user_name=wp_comment.comment_author,
                                                      user_url=wp_comment.comment_author_url,
@@ -74,4 +74,4 @@ class Command(BaseCommand):
                 comment.created_on = wp_comment.comment_date
                 comment.is_public = True
                 comment.save()
-    
+   

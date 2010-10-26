@@ -8,3 +8,5 @@ localsettings.py
 *.kpf
 *.pydev*
 *.project
+blogango
+taggit
