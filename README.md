@@ -1,5 +1,10 @@
-This is a Django application which allows quick 
-integration between athe Django Admin and Wordpress.
+This is a Django App which allows easy
+integration between athe Django and Wordpress.
+
+All the core Wordpress files are made available as Django models.
 
 More details are available at
-http://uswaretech.com/blog/2010/01/wordpress-and-django-best-buddies/
+http://agiliq.com/blog/2010/01/wordpress-and-django-best-buddies/
+
+
+
