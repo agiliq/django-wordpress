@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/agiliq/django-wordpress.png?branch=travis)](https://travis-ci.org/agiliq/django-wordpress)
-[![Coverage Status](https://coveralls.io/repos/agiliq/django-wordpress/badge.png?branch=travis)](https://coveralls.io/r/agiliq/django-wordpress?branch=travis)
+[![Build Status](https://travis-ci.org/agiliq/django-wordpress.png?branch=master)](https://travis-ci.org/agiliq/django-wordpress)
+[![Coverage Status](https://coveralls.io/repos/agiliq/django-wordpress/badge.png?branch=master)](https://coveralls.io/r/agiliq/django-wordpress?branch=master)
 
 
 This is a Django App which allows easy
