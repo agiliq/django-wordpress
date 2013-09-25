@@ -7,6 +7,8 @@ Replace these with more appropriate tests for your application.
 
 from django.test import TestCase
 from django.template import Template, Context
+
+
 class SimpleTest(TestCase):
     def test_template_tags(self):
         template_string = """
